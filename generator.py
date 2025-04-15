@@ -1,25 +1,69 @@
+import customtkinter as ctk
 import random
 
-letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' # All letters (lowercase + uppercase)
+letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 numbers = '0123456789'
-special_characters = '!@#$%^&*()-_=+[]{};:,.<>?/|`~' # All special characters 
+special_characters = '!@#$%^&*()-_=+[]{};:,.<>?/|`~'
 
-print("---Welcome to the Password Generator!---")
-number_of_letters = int(input("Enter the number of letters you would like: "))
-number_of_numbers = int(input("Enter the number of numbers you would like: "))
-number_of_special_characters = int(input("Enter the number of special characters you would like: "))
 
-total = [] # List to store the password to be generated
+def generate_password_gui():
+    # If the user enters a non-integer value, it will show an error message in the password field
+    try:
+        # Get the number of letters, numbers, and symbols from the user input
+        num_letters = int(entry_letters.get())
+        num_numbers = int(entry_numbers.get())
+        num_symbols = int(entry_symbols.get())
 
-for i in range(number_of_letters): # Loop to add letters to the password
-    total.append(random.choice(letters)) # Append a random letter to the password
-for i in range(number_of_numbers): # Loop to add numbers to the password
-    total.append(random.choice(numbers)) # Append a random number to the password
-for i in range(number_of_special_characters): # Loop to add special characters to the password
-    total.append(random.choice(special_characters)) # Append a random special character to the password
+        
+        total = [] # List to store the password to be generated
 
-random.shuffle(total) # Shuffle the password to make it more secure
+        # For loop to add letters, numbers, and symbols to the password
+        for i in range(num_letters): 
+            total.append(random.choice(letters))
+        for i in range(num_numbers):
+            total.append(random.choice(numbers))
+        for i in range(num_symbols):
+            total.append(random.choice(special_characters))
 
-password = ''.join(total) # Join the list to make it a string
+        random.shuffle(total)
+        password = ''.join(total)
 
-print(f"Your password is: {password}") # Print the password
+        entry_result.delete(0, ctk.END)
+        entry_result.insert(0, password)
+    except ValueError:
+        entry_result.delete(0, ctk.END)
+        entry_result.insert(0, "Enter valid numbers")
+
+
+# Set up the appearance and theme
+ctk.set_appearance_mode("dark")  
+ctk.set_default_color_theme("blue")  
+
+# Creates the app window
+app = ctk.CTk()
+app.geometry("400x400")
+app.title("Password Generator")
+
+# Input box: Number of Letters
+ctk.CTkLabel(app, text="Enter Number of Letters:").pack(pady=5)
+entry_letters = ctk.CTkEntry(app)
+entry_letters.pack(pady=5)
+
+# Input box: Number of Numbers
+ctk.CTkLabel(app, text="Enter Number of Numbers:").pack(pady=5)
+entry_numbers = ctk.CTkEntry(app)
+entry_numbers.pack(pady=5)
+
+# Input box: Number of Special Characters
+ctk.CTkLabel(app, text="Enter Number of Special Characters:").pack(pady=5)
+entry_symbols = ctk.CTkEntry(app)
+entry_symbols.pack(pady=5)
+
+# Output box: Display Password
+ctk.CTkLabel(app, text="Your Password").pack(pady=(15, 5))
+entry_result = ctk.CTkEntry(app, width=300)
+entry_result.pack(pady=5)
+
+# Button: Generates Password
+generate_button = ctk.CTkButton(app, text="Generate Password", command=generate_password_gui)
+generate_button.pack(pady=20)
